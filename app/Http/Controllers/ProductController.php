@@ -59,7 +59,10 @@ class ProductController extends Controller
 
         $products = $query->latest()->paginate(12);
         
-        return view('shop.index', compact('products'));
+        // Fetch all active categories for the filter dropdown
+        $categories = Category::where('is_active', true)->get();
+        
+        return view('shop.index', compact('products', 'categories'));
     }
 
     /**
