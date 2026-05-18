@@ -45,6 +45,38 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get all products listed by this user (for sellers)
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'seller_id');
+    }
+
+    /**
+     * Get the cart for this user
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
+     * Check if user is a seller
+     */
+    public function isSeller()
+    {
+        return $this->role === 'seller' || $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is an admin
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
      * Check if user is admin
      */
     public function isAdmin()
