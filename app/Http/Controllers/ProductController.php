@@ -39,7 +39,7 @@ class ProductController extends Controller
         // Category filter
         if ($request->filled('category') && $request->get('category') !== 'all') {
             $query->whereHas('category', function($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->get('category') . '%');
+                $q->where('slug', 'LIKE', '%' . $request->get('category') . '%');
             });
         }
 
