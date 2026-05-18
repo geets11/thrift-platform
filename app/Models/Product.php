@@ -22,6 +22,7 @@ class Product extends Model
         'images',
         'is_available',
         'is_featured',
+        'status',
         'category_id',
         'seller_id'
     ];

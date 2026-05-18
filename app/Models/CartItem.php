@@ -28,6 +28,9 @@ class CartItem extends Model
 
     public function getTotalPriceAttribute()
     {
-        return $this->quantity * $this->product->price;
+        if ($this->product) {
+            return $this->quantity * $this->product->price;
+        }
+        return 0;
     }
 }

@@ -7,23 +7,34 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Product Images -->
         <div>
-            @if($product->images && count($product->images) > 0)
+            @php
+                if (is_string($product->images)) {
+                    $images = json_decode($product->images, true) ?? [];
+                } else {
+                    $images = is_array($product->images) ? $product->images : [];
+                }
+            @endphp
+            
+            @if($images && count($images) > 0)
                 <div class="space-y-4">
                     <!-- Main Image -->
                     <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden">
                         <img id="main-image" 
-                             src="{{ $product->images[0] }}" 
+                             src="@if(str_starts_with($images[0], 'http')){{ $images[0] }}@else{{ asset('storage/' . $images[0]) }}@endif" 
                              alt="{{ $product->name }}" 
                              class="w-full h-96 object-cover">
                     </div>
                     
                     <!-- Thumbnail Images -->
-                    @if(count($product->images) > 1)
+                    @if(count($images) > 1)
                         <div class="grid grid-cols-4 gap-2">
-                            @foreach($product->images as $index => $image)
-                                <button onclick="changeMainImage('{{ $image }}')" 
+                            @foreach($images as $index => $image)
+                                @php
+                                    $imagePath = str_starts_with($image, 'http') ? $image : asset('storage/' . $image);
+                                @endphp
+                                <button onclick="changeMainImage('{{ $imagePath }}')" 
                                         class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden hover:opacity-75 transition">
-                                    <img src="{{ $image }}" 
+                                    <img src="{{ $imagePath }}" 
                                          alt="{{ $product->name }} {{ $index + 1 }}" 
                                          class="w-full h-20 object-cover">
                                 </button>
@@ -125,9 +136,25 @@
                 @foreach($relatedProducts as $relatedProduct)
                     <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
                         <div class="aspect-w-1 aspect-h-1 bg-gray-200">
-                            <img src="{{ $relatedProduct->first_image }}" 
-                                 alt="{{ $relatedProduct->name }}" 
-                                 class="w-full h-48 object-cover">
+                            @php
+                                if (is_string($relatedProduct->images)) {
+                                    $relImages = json_decode($relatedProduct->images, true) ?? [];
+                                } else {
+                                    $relImages = is_array($relatedProduct->images) ? $relatedProduct->images : [];
+                                }
+                                $relImage = $relImages[0] ?? null;
+                            @endphp
+                            @if($relImage)
+                                <img src="@if(str_starts_with($relImage, 'http')){{ $relImage }}@else{{ asset('storage/' . $relImage) }}@endif" 
+                                     alt="{{ $relatedProduct->name }}" 
+                                     class="w-full h-48 object-cover">
+                            @else
+                                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            @endif
                         </div>
                         <div class="p-4">
                             <h3 class="font-medium text-gray-900 mb-2">{{ $relatedProduct->name }}</h3>

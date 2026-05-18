@@ -59,7 +59,7 @@ class ProductController extends Controller
 
         $products = $query->latest()->paginate(12);
         
-        return view('products.index', compact('products'));
+        return view('shop.index', compact('products'));
     }
 
     /**

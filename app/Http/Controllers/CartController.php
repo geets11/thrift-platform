@@ -23,7 +23,7 @@ class CartController extends Controller
             'quantity' => 'integer|min:1|max:10'
         ]);
 
-        $quantity = $request->get('quantity', 1);
+        $quantity = intval($request->get('quantity', 1));
 
         if (!$product->is_available) {
             return back()->with('error', 'This item is no longer available.');

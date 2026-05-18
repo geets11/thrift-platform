@@ -23,9 +23,9 @@ Route::middleware('auth')->group(function () {
 
 // Product and Category routes (public)
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
-Route::get('/shop/{product}', [ProductController::class, 'show'])->name('shop.show');
+Route::get('/shop/{product:slug}', [ProductController::class, 'show'])->name('shop.show');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Cart routes
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -35,10 +35,26 @@ Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart
 
 // Admin routes (for sellers)
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+    
     Route::resource('products', AdminProductController::class);
     
     // Quick route to add products for testing
     Route::get('/add-product', [AdminProductController::class, 'create'])->name('add-product');
+    
+    Route::get('/notifications', function () {
+        return view('admin.notifications');
+    })->name('notifications');
+    
+    Route::get('/settings', function () {
+        return view('admin.settings');
+    })->name('settings');
+    
+    Route::get('/users', function () {
+        return view('admin.users');
+    })->name('users');
 });
 
 // Static pages
