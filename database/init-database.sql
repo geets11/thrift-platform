@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(255),
     email_verified_at DATETIME,
     password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') DEFAULT 'user',
+    role VARCHAR(50) DEFAULT 'user',
     remember_token VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS products (
     original_price DECIMAL(10, 2),
     size VARCHAR(255),
     brand VARCHAR(255),
-    condition VARCHAR(20) NOT NULL CHECK(condition IN ('excellent', 'very_good', 'good', 'fair')),
+    condition VARCHAR(20) NOT NULL,
     images JSON,
     is_available BOOLEAN DEFAULT 1,
     is_featured BOOLEAN DEFAULT 0,
