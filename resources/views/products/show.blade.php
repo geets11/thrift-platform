@@ -12,7 +12,7 @@
             <div class="product-detail-content">
                 <div class="product-detail-header">
                     <div class="product-detail-category">
-                        <span class="badge">{{ $product->category }}</span>
+                        <span class="badge">{{ $product->category ? $product->category->name : 'Uncategorized' }}</span>
                     </div>
                     <div class="product-detail-actions">
                         <button class="btn-icon">
@@ -30,7 +30,7 @@
                 <div class="product-detail-info">
                     <p>Condition: {{ $product->condition }}</p>
                     <p>Size: {{ $product->size }}</p>
-                    <p>Seller: {{ $product->user->name }}</p>
+                    <p>Seller: {{ $product->seller ? $product->seller->name : 'Unknown Seller' }}</p>
                 </div>
                 
                 <div class="product-detail-description">
