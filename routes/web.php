@@ -6,10 +6,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DebugController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Debug endpoint
+Route::get('/debug/check', [DebugController::class, 'check']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
