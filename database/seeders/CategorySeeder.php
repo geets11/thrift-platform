@@ -9,6 +9,9 @@ class CategorySeeder extends Seeder
 {
     public function run()
     {
+        // Clear existing categories to avoid UNIQUE constraint violations
+        Category::truncate();
+
         $categories = [
             [
                 'name' => "Women's Clothing",

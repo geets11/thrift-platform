@@ -11,19 +11,23 @@ class ProductSeeder extends Seeder
 {
     public function run()
     {
-        $categories = Category::all();
-        $users = User::all();
+        // Clear existing products to avoid constraint violations
+        Product::truncate();
 
-        if ($users->isEmpty()) {
-            // Create a default seller if no users exist
-            $seller = User::create([
-                'name' => 'ThriftPlatform Admin',
-                'email' => 'admin@thriftplatform.com',
+        $categories = Category::all();
+
+        // Create test users if they don't exist
+        $seller = User::firstOrCreate(
+            ['email' => 'seller@thriftplatform.com'],
+            [
+                'name' => 'ThriftPlatform Seller',
                 'password' => bcrypt('password'),
-                'email_verified_at' => now()
-            ]);
-            $users = collect([$seller]);
-        }
+                'email_verified_at' => now(),
+                'role' => 'seller'
+            ]
+        );
+
+        $users = collect([$seller]);
 
         $products = [
             [

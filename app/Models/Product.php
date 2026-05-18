@@ -22,6 +22,7 @@ class Product extends Model
         'images',
         'is_available',
         'is_featured',
+        'status',
         'category_id',
         'seller_id'
     ];
@@ -49,32 +50,49 @@ class Product extends Model
         return $this->hasMany(CartItem::class);
     }
 
+    /**
+     * Get the route key for implicit route model binding
+     */
     public function getRouteKeyName()
     {
         return 'slug';
     }
 
-    public function getFirstImageAttribute()
-    {
-        return $this->images ? $this->images[0] : '/placeholder.svg?height=300&width=300&query=product+image';
-    }
-
-    public function getDiscountPercentageAttribute()
-    {
-        if ($this->original_price && $this->original_price > $this->price) {
-            return round((($this->original_price - $this->price) / $this->original_price) * 100);
-        }
-        return 0;
-    }
-
+    /**
+     * Automatically generate slug
+     */
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($product) {
             if (empty($product->slug)) {
                 $product->slug = Str::slug($product->name);
             }
         });
+
+        static::updating(function ($product) {
+            if ($product->isDirty('name')) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+    }
+
+    public function getFirstImageAttribute()
+    {
+        return $this->images
+            ? $this->images[0]
+            : '/placeholder.svg?height=300&width=300&query=product+image';
+    }
+
+    public function getDiscountPercentageAttribute()
+    {
+        if ($this->original_price && $this->original_price > $this->price) {
+            return round(
+                (($this->original_price - $this->price) / $this->original_price) * 100
+            );
+        }
+
+        return 0;
     }
 }

@@ -45,23 +45,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Check if user is admin
-     */
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
-    /**
-     * Get the products that belong to the user.
+     * Get all products listed by this user
      */
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'seller_id');
     }
 
     /**
-     * Get the cart items that belong to the user.
+     * Get the cart for this user
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
+     * Get the cart items for this user
      */
     public function cartItems()
     {
@@ -69,10 +69,26 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the notifications that belong to the user.
+     * Get notifications for this user
      */
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Check if user is a seller
+     */
+    public function isSeller()
+    {
+        return $this->role === 'seller' || $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }
